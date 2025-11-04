@@ -1,0 +1,31 @@
+from flask import Flask, request, render_template, Response
+import io
+from PIL import Image
+import base64
+
+app = Flask(__name__)
+latest_frame = None
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    global latest_frame
+    image_data = request.data
+    latest_frame = image_data
+    return "Frame received", 200
+
+@app.route('/video_feed')
+def video_feed():
+    def generate():
+        global latest_frame
+        while True:
+            if latest_frame:
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + latest_frame + b'\r\n')
+    return Response(generate(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=10000)
