@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ESP32-CAM Live</title>
+</head>
+<body style="text-align:center;">
+  <h1>🔴 ESP32-CAM Live Stream</h1>
+  <img src="{{ url_for('video_feed') }}" width="640" height="480">
+</body>
+</html>
